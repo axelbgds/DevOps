@@ -1,24 +1,12 @@
- # Run
- docker compose -f docker-compose.yml up -d
+ # Doing
+ TP from tranning platforms
 
- ## Check the container
- docker ps
+# Projects 
+ 00 : Install docker with centos in VB and run server
+ 01 : Run environnement
+ 02 : Build image with docker and add a static website
+ 03 : Manage network (create network bridge - add two containers - ping with this serve to check netwok DNS)
+ 04 : Manage volume in containers (add two containers - create file toto.txt)
+ 05 : Manage Odoo solution with docker (expose port 80 - same network - check is application is ready)
+ 06 : Manage a cluster swarm (master and node - deploy two instances - init cluster and add worker - deploy app)
  
- ## Add nginx
- docker tag nginx localhost:5000/nginx:version1
- 
- ## Check network
- docker network ls
-
- ## Inspect container ID
- docker inspect container_ID
-
- ## Expose le backend
- docker compose -f docker-compose.yml down
-
- ## Push notre image nginx
- docker push localhost:5000/nginx:version1
-
- ## Kill container
- docker compose -f docker-compose.yml down
-
