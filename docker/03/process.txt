@@ -1,0 +1,147 @@
+Docker Setup, Networking, and Container Management Guide
+========================================================
+
+This guide provides a comprehensive overview of setting up Docker, creating custom networks, managing containers, and building custom images.
+
+1. Installing Docker on CentOS
+------------------------------
+
+1.1. Download the official Docker installation script:
+    $ curl -fsSL https://get.docker.com -o get-docker.sh
+
+1.2. (Optional) Verify the script content:
+    $ cat get-docker.sh
+
+1.3. (Optional) Run the script in dry-run mode to preview actions:
+    $ sudo sh get-docker.sh --dry-run
+
+1.4. Execute the installation script:
+    $ sudo sh get-docker.sh
+
+1.5. Post-installation tasks:
+    a. Add your user to the docker group (allows running Docker without sudo):
+       $ sudo usermod -aG docker $USER
+    
+    b. Start and enable the Docker service:
+       $ sudo systemctl start docker
+       $ sudo systemctl enable docker
+    
+    c. Log out and log back in for group changes to take effect
+
+1.6. Verify the installation:
+    $ docker --version
+    $ docker ps
+    $ groups
+
+1.7. Test Docker functionality:
+    $ docker run hello-world
+
+2. Creating and Managing a Custom Bridge Network
+------------------------------------------------
+
+2.1. Create a custom bridge network:
+    $ docker network create --driver=bridge --subnet=192.168.2.0/24 sharenetwork
+
+2.2. List available networks to verify creation:
+    $ docker network ls
+
+2.3. Create containers on the custom network:
+    $ docker run -it --name ubuntu1 --network sharenetwork -d ubuntu
+    $ docker run -it --name ubuntu2 --network sharenetwork -d ubuntu
+
+2.4. Verify container creation:
+    $ docker ps
+
+2.5. (Optional) Inspect container details:
+    $ docker inspect ubuntu1
+
+2.6. Access the ubuntu1 container:
+    $ docker exec -it ubuntu1 bash
+
+2.7. Install network tools in ubuntu1:
+    $ apt-get update && apt-get install -y iputils-ping iproute2
+
+2.8. Test network connectivity:
+    a. Ping ubuntu2 from ubuntu1:
+       $ ping -c 4 ubuntu2
+    
+    b. Check IP address of ubuntu1:
+       $ ip addr show
+
+2.9. (Optional) Test from ubuntu2:
+    a. Access ubuntu2:
+       $ docker exec -it ubuntu2 bash
+    
+    b. Install network tools in ubuntu2:
+       $ apt-get update && apt-get install -y iputils-ping iproute2
+    
+    c. Ping ubuntu1 from ubuntu2:
+       $ ping -c 4 ubuntu1
+
+2.10. (Optional) Cleanup:
+     $ docker stop ubuntu1 ubuntu2
+     $ docker rm ubuntu1 ubuntu2
+     $ docker network rm sharenetwork
+
+3. Running Application Containers
+---------------------------------
+
+3.1. Launch an Nginx container:
+    $ docker run --name nginx -d -p 80:80 nginx
+    Access at: http://<MACHINE_IP>:80
+
+3.2. Launch containers with environment variables:
+    a. Red app:
+       $ docker run --name web-color -e APP_COLOR="red" -d -p 8080:8080 kodekloud/webapp-color
+       Access at: http://<MACHINE_IP>:8080
+    
+    b. Blue app:
+       $ docker run --name web-color2 -e APP_COLOR="blue" -d -p 8180:8080 kodekloud/webapp-color
+       Access at: http://<MACHINE_IP>:8180
+
+4. Creating a Custom Docker Image
+---------------------------------
+
+4.1. Create a file named 'Dockerfile' with the following content:
+
+FROM ubuntu:22.04
+
+LABEL maintainer="Eazytraining <contact@eazytraining.fr>"
+LABEL version="1.0"
+LABEL description="Static website served by Nginx"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    nginx \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN rm -rf /var/www/html/* \
+    && git clone https://github.com/diranetafen/static-website-example.git /var/www/html/
+
+EXPOSE 80
+
+RUN useradd -ms /bin/bash webuser
+USER webuser
+
+WORKDIR /var/www/html
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
+
+CMD ["nginx", "-g", "daemon off;"]
+
+4.2. Build the custom image:
+    $ docker build -t my-custom-nginx .
+
+4.3. Run a container using the custom image:
+    $ docker run -d -p 8080:80 my-custom-nginx
+
+4.4. Access the custom website:
+    http://<MACHINE_IP>:8080
+
+Note: Replace <MACHINE_IP> with your actual machine's IP address in all URLs.
+
+This guide covers the essential aspects of Docker setup, networking, container management, and custom image creation. Follow the steps sequentially for a complete Docker learning experience.

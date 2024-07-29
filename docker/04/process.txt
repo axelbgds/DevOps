@@ -1,0 +1,36 @@
+## Step 1: Create a Docker Network
+First, create a Docker network to allow the containers to communicate with each other.
+
+```sh
+docker network create my_network
+
+## Step 2: Create and Run the First Container with a Volume
+Create a Docker container with a volume attached to it. This volume will be used to demonstrate data persistence.
+
+```sh
+docker run -d --name container1 --network my_network -v my_volume:/data busybox
+Step 3: Add the toto.txt File in the Volume
+Access the first container and create the toto.txt file in the volume.
+
+```sh
+docker exec -it container1 sh
+Once inside the container, run:
+
+```sh
+echo "This is a test file" > /data/toto.txt
+exit
+Step 4: Create and Run the Second Container with the Same Volume
+Now, create a second container and attach the same volume to it. This will demonstrate data persistence across containers.
+
+```sh
+docker run -d --name container2 --network my_network -v my_volume:/data busybox
+Step 5: Verify Data Persistence
+Access the second container to verify the toto.txt file is present and contains the expected data.
+
+```sh
+docker exec -it container2 sh
+Once inside the second container, run:
+
+```sh
+cat /data/toto.txt
+You should see the content This is a test file.

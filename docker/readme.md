@@ -33,10 +33,7 @@ This repository contains a series of practical projects to learn and master Dock
 - Configure containers on the same network
 - Verify that the application is operational
 
-### 06: Managing a Swarm Cluster
-- Configure a master node and worker nodes
-- Initialize the cluster and add workers
-- Deploy an application on two instances
+z
 
 ## Instructions
 

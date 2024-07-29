@@ -1,0 +1,8 @@
+Start the containers:
+Use Docker Compose to start the containers.
+
+sh
+```docker-compose up -d
+Verify that the application is operational:
+Open a web browser and go to http://localhost. You should see the Odoo setup page.
+

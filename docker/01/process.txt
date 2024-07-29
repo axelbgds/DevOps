@@ -1,0 +1,72 @@
+# Installing Docker on CentOS
+
+
+## Recommended Method: Official Installation Script
+
+1. Download the installation script:
+   curl -fsSL https://get.docker.com -o get-docker.sh
+
+2. Verify the script content (optional but recommended):
+   cat get-docker.sh
+
+3. Run the script in dry-run mode to check the steps (optional):
+   sudo sh get-docker.sh --dry-run
+
+4. Execute the script to install Docker:
+   sudo sh get-docker.sh
+
+Note: The script will automatically detect the Linux distribution and install the latest stable version of Docker.
+
+
+## Post-installation Tasks
+
+1. Add the user to the docker group to avoid using sudo:
+   sudo usermod -aG docker $USER
+
+2. Start the Docker service:
+   sudo systemctl start docker
+   sudo systemctl status docker
+
+3. Log out and log back in to apply group changes
+
+4. Verify the installation:
+   docker ps
+
+5. Check docker group membership:
+   groups
+
+6. Enable Docker to start on boot:
+   sudo systemctl enable docker
+
+
+## Functionality Check
+
+1. Check Docker version:
+   docker --version
+
+2. Test with the "hello-world" image:
+   docker run hello-world
+
+## Launch Your First Container (nginx)
+
+docker run --name nginx -d -p 80:80 nginx
+
+Access the application via the machine's IP on port 80:
+http://<MACHINE_IP>:80
+
+To get the machine's IP:
+ip a
+
+## Using Environment Variables
+
+1. Launch a container with an environment variable:
+   docker run --name web-color -e APP_COLOR="red" -d -p 8080:8080 kodekloud/webapp-color
+
+   Test in browser: http://<MACHINE_IP>:8080
+
+2. Launch a second container on a different port:
+   docker run --name web-color2 -e APP_COLOR="blue" -d -p 8180:8080 kodekloud/webapp-color
+
+   Test in browser: http://<MACHINE_IP>:8180
+
+Note: Replace <MACHINE_IP> with the actual IP address of your machine.

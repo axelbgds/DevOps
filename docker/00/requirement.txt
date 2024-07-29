@@ -1,0 +1,2 @@
+Vagrant 2.4.1
+Virtualbox 7.0.18
