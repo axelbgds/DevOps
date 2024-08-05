@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    volumes:
+      - ./api/student_age.json:/data/student_age.json
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+
+  website:
+    image: php:apache
+    volumes:
+      - ./website:/var/www/html
+    ports:
+      - "80:80"
+    environment:
+      - USERNAME=toto
+      - PASSWORD=python
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
