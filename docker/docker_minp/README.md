@@ -72,6 +72,10 @@ student-list-app/
 1. Clone the repository:
 2. Build and start the containers
   docker-compose up -d --build
+3. Stop and remove containers
+  docker-compose down
+  docker ps -a
+  docker system prune -a
 
 ## 🖥 Usage
 

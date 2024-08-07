@@ -10,6 +10,15 @@ from flask_simpleldap import LDAP
 import json
 import os
 
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Welcome to the Student Age API!"
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
+
 auth = HTTPBasicAuth()
 app = Flask(__name__)
 app.debug = True
